@@ -1,5 +1,6 @@
 import os
 import torch
+import onnx
 import torch.nn as nn
 from torch import optim
 import matplotlib.pyplot as plt
@@ -208,3 +209,9 @@ class Solver(object):
         plt.savefig(os.path.join(self.args.output_path, 'graph_accuracy.png'), bbox_inches='tight')
         plt.close('all')
 
+    def export_onnx(self):
+        self.model.load_state_dict(torch.load(os.path.join(self.args.model_path, 'ViT_model.pt')))
+        self.model = self.model.to('cpu')
+        img = torch.randn(1, 1, 28, 28)
+        torch.onnx.export(self.model, img, "ViT_model.onnx")
+        onnx.shape_inference.infer_shapes_path('ViT_model.onnx', 'ViT_model-si.onnx')
