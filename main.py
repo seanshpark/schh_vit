@@ -38,7 +38,7 @@ def update_args(args):
     return args
 
 
-if __name__ == '__main__':
+def init_parser():
     parser = argparse.ArgumentParser(description='Simple and easy to understand PyTorch implementation of Vision Transformer (ViT) from scratch')
 
     # Training Arguments
@@ -67,6 +67,12 @@ if __name__ == '__main__':
     parser.add_argument('--model_path', type=str, default='./model', help='path to store trained model')
     parser.add_argument("--load_model", type=bool, default=False, help="load saved model")
 
+    return parser
+
+
+def execute_me():
+    parser = init_parser()
+
     start_time = datetime.datetime.now()
     print("Started at " + str(start_time.strftime('%Y-%m-%d %H:%M:%S')))
 
@@ -80,3 +86,20 @@ if __name__ == '__main__':
     duration = end_time - start_time
     print("Ended at " + str(end_time.strftime('%Y-%m-%d %H:%M:%S')))
     print("Duration: " + str(duration))
+
+
+def export_onnx():
+    parser = init_parser()
+    args = parser.parse_args()
+    args = update_args(args)
+
+    # Create required directories if they don't exist
+    os.makedirs(args.model_path,  exist_ok=True)
+    os.makedirs(args.output_path, exist_ok=True)
+
+    solver = Solver(args)
+    solver.export_onnx()
+
+
+if __name__ == '__main__':
+    execute_me()
