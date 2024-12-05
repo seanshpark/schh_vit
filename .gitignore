@@ -1,0 +1,7 @@
+/data/
+/model/
+/outputs/
+
+__pycache__
+*.ipynb
+*.onnx
